@@ -4,12 +4,17 @@ import { TextField, RadioGroup, FormControlLabel, Radio, Button, Box } from '@ma
 import styled from 'styled-components';
 import AppContext from '../../context/AppContext';
 
-export default function EventForm(props: {
-	onAddEventOrReminder: (value: any) => void;
-	onClose: () => void;
-	context: moment.Moment;
-}) {
-	const { register, handleSubmit, control } = useForm({
+export interface IEvent {
+	createdOn?: string;
+	title: string;
+	description: string;
+	type: string;
+	start: string;
+	end: string;
+}
+
+export default function EventForm(props: { onClose: () => void; selectedDate: string }) {
+	const { register, handleSubmit, control, reset } = useForm<IEvent>({
 		defaultValues: {
 			title: '',
 			description: '',
@@ -19,13 +24,21 @@ export default function EventForm(props: {
 		}
 	});
 	const {
-		state: { dateContext }
-  } = useContext(AppContext);
-  
-	const onSubmit = (data: any) => {
-		data.date = props.context?.format?.();
-		props.onAddEventOrReminder(data);
+		actions: { addEvent }
+	} = useContext(AppContext);
+
+	const onSubmit = (data: IEvent) => {
+		console.log(data);
+		data.createdOn = props.selectedDate;
 		props.onClose();
+		addEvent(data);
+		reset({
+			title: '',
+			description: '',
+			type: 'event',
+			start: '',
+			end: ''
+		});
 	};
 
 	return (

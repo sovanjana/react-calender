@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Menu, MenuItem, Icon, Box } from '@material-ui/core';
 import styled from 'styled-components';
 import moment from 'moment';
+import AppContext from '../../context/AppContext';
 
-export default function YearSelector(props: { year: string; onChangeYear: (value: string) => void }) {
+export default function YearSelector() {
+	const {
+		actions: { onChangeYear }
+	} = useContext(AppContext);
 	const years = () => {
 		const years = [];
 		const dateStart = moment().subtract(100, 'y');
@@ -20,7 +24,7 @@ export default function YearSelector(props: { year: string; onChangeYear: (value
 	const handleClose = () => setAnchorEl(null);
 
 	const handleSelect = (value: string) => {
-		props.onChangeYear(value);
+		onChangeYear(value);
 		setAnchorEl(null);
 	};
 
